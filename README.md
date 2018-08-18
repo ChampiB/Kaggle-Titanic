@@ -1,3 +1,7 @@
+# Challenge link
+
+https://www.kaggle.com/c/titanic
+
 # Model
 
 1) Load data from CSV
