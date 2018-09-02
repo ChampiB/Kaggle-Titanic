@@ -1,0 +1,36 @@
+// ==> GBT
+
+// 0.7896678966789668 (pclass, sex)
+// 0.8118081180811808 (pclass, sex, age) maxDeth 2 maxBIns 2
+// 0.8118081180811808 (pclass, sex, age, fare) maxDeth 2 maxBIns 5
+// 0.8154981549815498 (pclass, sex, age) maxDeth 5 maxBIns 10
+
+// 0.7859778597785978 (pclass, sex, age, embarkedClass, numberOfCabin) maxDeth 5 maxBIns 30
+// 0.8191881918819188 (pclass, sex, age, embarkedClass, sibsp) maxDeth 2 maxBIns 10
+// 0.8376383763837638 (pclass, sex, age, embarkedClass, parch) maxDeth 2 maxBIns 30
+// 0.8044280442804428 (pclass, sex, age, embarkedClass, fare)) maxDeth 2 maxBIns 5
+
+// 0.8413284132841329 (pclass, sex, age, embarkedClass) maxDeth 2 maxBIns 30
+// 0.8487084870848709
+
+// ==> Logistic Regressor
+
+// 0.8044280442804428 (pclass, sex, age, sibsp, numberOfCabin, embarkedClass)
+// 0.8081180811808119 (pclass, sex, age, embarkedClass)
+// 0.8081180811808119 (pclass, sex, age, parch, numberOfCabin, embarkedClass)
+// 0.8154981549815498 (pclass, sex, age, fare, numberOfCabin, embarkedClass)
+// 0.8154981549815498 (pclass, sex, age, numberOfCabin, embarkedClass)
+
+// ==> MLP
+
+// 0.6051660516605166 (pclass, sex, age, sibsp, numberOfCabin, embarkedClass) 2 hidden layers
+
+// 0.7970479704797048 (pclass, sex, age, numberOfCabin, embarkedClass) 3 hidden layers
+// 0.8154981549815498 (pclass, sex, age, sibsp, fare, numberOfCabin, embarkedClass) 3 hidden layers
+
+// 0.8302583025830258 (pclass, sex, age, sibsp, parch, numberOfCabin, embarkedClass) 3 hidden layers
+// 0.8007380073800738 (pclass, sex, age, sibsp, parch, numberOfCabin, embarkedClass) 5 hidden layers
+// 0.8044280442804428 (pclass, sex, age, sibsp, numberOfCabin, embarkedClass) 5 hidden layers
+// 0.8154981549815498 (pclass, sex, age, sibsp, numberOfCabin, embarkedClass) 4 hidden layers
+
+// 0.8487084870848709 (pclass, sex, age, sibsp, numberOfCabin, embarkedClass) 3 hidden layers

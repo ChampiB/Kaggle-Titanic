@@ -1,14 +1,15 @@
 package trainers
 
 import helpers.SparkHelper
-import org.apache.spark.ml.classification.GBTClassifier
-import org.apache.spark.ml.evaluation.{BinaryClassificationEvaluator, MulticlassClassificationEvaluator}
+import org.apache.spark.ml.classification.LogisticRegression
+import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
 import org.apache.spark.ml.tuning.{ParamGridBuilder, TrainValidationSplit, TrainValidationSplitModel}
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
 import org.apache.spark.sql.DataFrame
 
-class GBT extends Trainer {
+class LogisticClassifier extends Trainer {
   def fit(data:DataFrame):TrainValidationSplitModel = {
+
     // Spark import
     val ss = SparkHelper.getSession
     import ss.implicits._
@@ -17,17 +18,17 @@ class GBT extends Trainer {
     val Array(training, test) = data.randomSplit(Array(0.7, 0.3), seed = 42)
 
     // Create gradient boosting tree model.
-    val gbt = new GBTClassifier().setMaxIter(100)
+    val lr = new LogisticRegression().setMaxIter(200)
 
     // Create parameters grid.
     val paramGrid = new ParamGridBuilder()
-      .addGrid(gbt.maxBins, Array(2, 5, 10, 20, 30, 45, 60))
-      .addGrid(gbt.maxDepth, Array(2, 5, 10, 15))
+      .addGrid(lr.standardization, Array(true, false))
+      .addGrid(lr.elasticNetParam, Array(0.25D, 0.5D, 0.75D))
       .build()
 
     // Create trainer using validation split to evaluate which set of parameters performs the best.
     val trainValidationSplit = new TrainValidationSplit()
-      .setEstimator(gbt)
+      .setEstimator(lr)
       .setEvaluator(new BinaryClassificationEvaluator)
       .setEstimatorParamMaps(paramGrid)
       .setTrainRatio(0.8) // 80% of the data will be used for training and the remaining 20% for validation.

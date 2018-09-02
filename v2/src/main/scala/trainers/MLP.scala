@@ -1,14 +1,18 @@
 package trainers
 
 import helpers.SparkHelper
-import org.apache.spark.ml.classification.GBTClassifier
+import org.apache.spark.ml.classification.MultilayerPerceptronClassifier
 import org.apache.spark.ml.evaluation.{BinaryClassificationEvaluator, MulticlassClassificationEvaluator}
+import org.apache.spark.ml.linalg.DenseVector
 import org.apache.spark.ml.tuning.{ParamGridBuilder, TrainValidationSplit, TrainValidationSplitModel}
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
 import org.apache.spark.sql.DataFrame
 
-class GBT extends Trainer {
+import scala.collection.mutable
+
+class MLP extends Trainer {
   def fit(data:DataFrame):TrainValidationSplitModel = {
+
     // Spark import
     val ss = SparkHelper.getSession
     import ss.implicits._
@@ -17,18 +21,24 @@ class GBT extends Trainer {
     val Array(training, test) = data.randomSplit(Array(0.7, 0.3), seed = 42)
 
     // Create gradient boosting tree model.
-    val gbt = new GBTClassifier().setMaxIter(100)
+    val mlp = new MultilayerPerceptronClassifier().setMaxIter(200)
 
     // Create parameters grid.
+    val first = training.take(1)(0).getAs[DenseVector]("features")
     val paramGrid = new ParamGridBuilder()
-      .addGrid(gbt.maxBins, Array(2, 5, 10, 20, 30, 45, 60))
-      .addGrid(gbt.maxDepth, Array(2, 5, 10, 15))
+      .addGrid(mlp.layers, Array(
+        Array(first.size, 5, 5, 5, 2),
+        Array(first.size, 7, 7, 7, 2),
+        Array(first.size, 9, 9, 9, 2),
+        Array(first.size, 11, 11, 11, 2),
+        Array(first.size, 13, 13, 13, 2),
+      ))
       .build()
 
     // Create trainer using validation split to evaluate which set of parameters performs the best.
     val trainValidationSplit = new TrainValidationSplit()
-      .setEstimator(gbt)
-      .setEvaluator(new BinaryClassificationEvaluator)
+      .setEstimator(mlp)
+      .setEvaluator(new MulticlassClassificationEvaluator)
       .setEstimatorParamMaps(paramGrid)
       .setTrainRatio(0.8) // 80% of the data will be used for training and the remaining 20% for validation.
 
