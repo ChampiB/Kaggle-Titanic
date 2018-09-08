@@ -34,3 +34,6 @@
 // 0.8154981549815498 (pclass, sex, age, sibsp, numberOfCabin, embarkedClass) 4 hidden layers
 
 // 0.8487084870848709 (pclass, sex, age, sibsp, numberOfCabin, embarkedClass) 3 hidden layers
+
+// Best Logistic 0.8081180811808119
+// Best MLP      0.8118081180811808

@@ -1,8 +1,6 @@
 package helpers
 
-import org.apache.spark.ml.linalg.Vectors
 import org.apache.spark.sql.DataFrame
-
 
 object LoaderHelper {
   def loadFeatures(file:String):DataFrame = {
@@ -25,10 +23,19 @@ object LoaderHelper {
         val numberOfCabin = if (cabin != null) cabin.split(" ").length.toDouble else 0D
         val embarked      = row.getAs[String]("Embarked")
         val embarkedClass = if (embarked == "Q") 0D else if (embarked == "S") 1D else 2D
-        (id, Vectors.dense(pclass, sex, age, sibsp/*, parch, fare*/, numberOfCabin, embarkedClass))
+        (id, pclass, sex, age, sibsp, parch, fare, cabin, numberOfCabin, embarked, embarkedClass)
       }
-      .withColumnRenamed("_1", "id")
-      .withColumnRenamed("_2", "features")
+      .withColumnRenamed("_1",  "id")
+      .withColumnRenamed("_2",  "pclass")
+      .withColumnRenamed("_3",  "sex")
+      .withColumnRenamed("_4",  "age")
+      .withColumnRenamed("_5",  "sibsp")
+      .withColumnRenamed("_6",  "parch")
+      .withColumnRenamed("_7",  "fare")
+      .withColumnRenamed("_8",  "cabin")
+      .withColumnRenamed("_9",  "numberOfCabin")
+      .withColumnRenamed("_10", "embarked")
+      .withColumnRenamed("_11", "embarkedClass")
   }
 
   def loadLabel(file:String):DataFrame = {

@@ -20,7 +20,7 @@ object SparkHelper {
     ss = SparkSession
       .builder()
       .appName(appName)
-      .master(Application.master_url)
+      .master(Application.masterUrl)
       .getOrCreate()
   }
 

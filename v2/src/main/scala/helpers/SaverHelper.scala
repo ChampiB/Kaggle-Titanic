@@ -3,6 +3,7 @@ package helpers
 import java.io.File
 import java.nio.file.{Files, Paths}
 import org.apache.commons.io.FileUtils
+import org.apache.spark.ml.PipelineModel
 import org.apache.spark.sql.DataFrame
 
 object SaverHelper {
@@ -22,6 +23,11 @@ object SaverHelper {
       .write
       .option("header", "true")
       .csv(path)
+  }
 
+  def save(model:PipelineModel, path:String):Unit = {
+    if (Files.exists(Paths.get(path)))
+      FileUtils.deleteDirectory(new File(path))
+    model.save(path)
   }
 }
