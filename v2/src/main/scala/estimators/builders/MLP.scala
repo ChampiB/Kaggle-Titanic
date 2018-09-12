@@ -13,7 +13,7 @@ class MLP() extends Builder {
 
   private val inputCol = "MLP-features"
   private val outputCol = "MLP-prediction"
-  private val numberOfFeatures = 6
+  private val numberOfFeatures = 7
 
   override def createFeatures(data: DataFrame): DataFrame = {
     val toDenseVector = udf(
@@ -21,10 +21,11 @@ class MLP() extends Builder {
         pclass:Double,
         sex:Double,
         age:Double,
-        sibsp:Double,
+        isAlive:Double,
         numberOfCabin:Double,
-        embarkedClass:Double
-      ) => Vectors.dense(Array(pclass, sex, age, sibsp, numberOfCabin, embarkedClass))
+        embarkedClass:Double,
+        title:Double
+      ) => Vectors.dense(Array(pclass, sex, age, isAlive, numberOfCabin, embarkedClass, title))
     )
     data.withColumn(
       inputCol,
@@ -32,9 +33,10 @@ class MLP() extends Builder {
         col("pclass"),
         col("sex"),
         col("age"),
-        col("sibsp"),
+        col("isAlone"),
         col("numberOfCabin"),
-        col("embarkedClass")
+        col("embarkedClass"),
+        col("title")
       )
     )
   }

@@ -15,9 +15,11 @@ class GBT extends Builder {
   private val outputCol = "GBT-prediction"
 
   override def createFeatures(data:DataFrame):DataFrame = {
-    val toDenseVector = udf((pclass:Double, sex:Double, age:Double, numberOfCabin:Double, embarkedClass:Double) =>
-      Vectors.dense(Array(pclass, sex, age, numberOfCabin, embarkedClass))
+    val toDenseVector = udf(
+      (pclass:Double, sex:Double, age:Double, numberOfCabin:Double, embarkedClass:Double, isAlone:Double, title:Double) =>
+      Vectors.dense(Array(pclass, sex, age, numberOfCabin, embarkedClass, isAlone, title))
     )
+    data.drop("sibsp", "sibsp", "parch", "fare", "cabin", "family")
     data.withColumn(
       inputCol,
       toDenseVector(
@@ -25,7 +27,9 @@ class GBT extends Builder {
         col("sex"),
         col("age"),
         col("numberOfCabin"),
-        col("embarkedClass")
+        col("embarkedClass"),
+        col("isAlone"),
+        col("title")
       )
     )
   }
@@ -39,8 +43,8 @@ class GBT extends Builder {
 
     // Create parameters grid.
     val paramGrid = new ParamGridBuilder()
-      .addGrid(gbt.maxBins, Array(30))
-      .addGrid(gbt.maxDepth, Array(5))
+      .addGrid(gbt.maxBins, Array(10))
+      .addGrid(gbt.maxDepth, Array(3))
       .build()
 
     // Create trainer using validation split to evaluate which set of parameters performs the best.
